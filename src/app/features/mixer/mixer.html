@@ -1,0 +1,60 @@
+<div class="block md:grid grid-cols-3 gap-6 space-y-6 space-x-6 md:space-y-0 md:space-x-0">
+  <app-deck-a #deckRefA></app-deck-a>
+
+  <div class="bg-gray-800 rounded-2xl p-6 flex flex-col items-center w-full space-y-6">
+    <div class="w-full">
+      <h2 class="text-lg font-semibold text-gray-200 mb-2">Crossfader</h2>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        (input)="setCrossfader($event)"
+        class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+      />
+    </div>
+
+    <div class="w-full">
+      <label class="text-sm text-gray-300 mb-1 block">Master Volume</label>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        (input)="setMasterVolumne($event)"
+        class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+      />
+    </div>
+
+    <div class="w-full mt-4">
+      <label class="text-sm text-gray-300 mb-2 block">EQ Controls</label>
+      <div class="flex justify-between">
+        <div class="flex flex-col items-center">
+          <label class="text-xs text-gray-400 mb-1">Low</label>
+          <input
+            type="range"
+            class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+
+        <div class="flex flex-col items-center">
+          <label class="text-xs text-gray-400 mb-1">Mid</label>
+          <input
+            type="range"
+            class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+
+        <div class="flex flex-col items-center">
+          <label class="text-xs text-gray-400 mb-1">High</label>
+          <input
+            type="range"
+            class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-deck-b #deckRefB></app-deck-b>
+</div>
