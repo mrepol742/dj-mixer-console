@@ -1,4 +1,8 @@
-<div class="bg-gray-800 p-6 rounded-2xl space-y-4">
+<div
+  class="bg-gray-800 p-6 rounded-2xl space-y-4"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+>
   <app-waveform [containerId]="'waveform-a'"></app-waveform>
 
   <input

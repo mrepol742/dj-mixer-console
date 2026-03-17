@@ -63,10 +63,15 @@ export class AudioEngine {
     return audioBuffer;
   }
 
-  async loadTrack(file: File) {
-    const arrayBuffer = await file.arrayBuffer();
+  async loadTrackFromUrl(url: string): Promise<AudioBuffer> {
+    if (!this.audioContext) {
+      this.initAudio();
+    }
 
-    this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+    return audioBuffer;
   }
 
   play() {

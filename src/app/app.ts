@@ -3,12 +3,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Mixer } from './features/mixer/mixer';
 import { Effects } from './features/effects/effects';
 import { Recorder } from './features/recorder/recorder';
-import { Library } from './features/library/library';
+import { LibraryFeature } from './features/library/library';
 import { DevtoolsDetector } from './core/security/devtools-dectector';
 
 @Component({
   selector: 'app-root',
-  imports: [Effects, Recorder, Mixer, Library, MatIconModule],
+  imports: [Effects, Recorder, Mixer, LibraryFeature, MatIconModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

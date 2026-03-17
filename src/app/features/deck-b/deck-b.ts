@@ -31,6 +31,23 @@ export class DeckB {
     });
   }
 
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    if (!event.dataTransfer?.files) return;
+
+    const file = event.dataTransfer.files[0];
+    if (!file.type.startsWith('audio/')) return;
+
+    this.audioEngine.loadFileToBuffer(file).then((buffer) => {
+      this.deckAudio.loadTrack(buffer);
+      this.waveform.loadTrack(file);
+    });
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
   play() {
     if (this.isPlaying) {
       this.isPlaying = false;
