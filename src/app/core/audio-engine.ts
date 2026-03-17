@@ -50,7 +50,7 @@ export class AudioEngine {
       throw new Error('AudioContext not initialized');
     }
 
-    return new DeckAudio(this.audioContext);
+    return new DeckAudio(this.audioContext, this.gainNode);
   }
 
   async loadFileToBuffer(file: File): Promise<AudioBuffer> {
@@ -90,7 +90,7 @@ export class AudioEngine {
     this.gainNode.gain.value = value;
   }
 
-  setMasterVolume(value: number) {
+  setMasterVolume(deckAGain: GainNode, deckBGain: GainNode, value: number) {
     this.gainNode.gain.value = value;
   }
 

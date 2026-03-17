@@ -15,8 +15,7 @@ export class DeckA {
   deckAudio!: DeckAudio;
   isPlaying: boolean = false;
 
-  constructor(private audioEngine: AudioEngine) {
-  }
+  constructor(private audioEngine: AudioEngine) {}
 
   ngOnInit() {
     this.deckAudio = this.audioEngine.createDeck();
@@ -33,24 +32,24 @@ export class DeckA {
   }
 
   play() {
-    if (!this.isPlaying) {
-      this.isPlaying = true;
+    if (this.isPlaying) {
+      this.isPlaying = false;
       this.pause();
-      return
+      return;
     }
-    this.isPlaying = false;
+    this.isPlaying = true;
     this.deckAudio.play();
-   //this.waveform.play();
+    //this.waveform.play();
   }
 
   pause() {
     this.deckAudio.pause();
-  // this.waveform.stop();
+    // this.waveform.stop();
   }
 
   stop() {
     this.deckAudio.stop();
-   //this.waveform.stop();
+    //this.waveform.stop();
   }
 
   setVolume(event: any) {

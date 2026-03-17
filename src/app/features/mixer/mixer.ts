@@ -31,6 +31,28 @@ export class Mixer {
 
   setMasterVolumne(event: any) {
     const value = parseFloat(event.target.value);
-    this.audioEngine.setMasterVolume(value);
+    this.audioEngine.setMasterVolume(
+      this.deckA.deckAudio.gainNode,
+      this.deckB.deckAudio.gainNode,
+      value,
+    );
+  }
+
+  setLow(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckA.deckAudio.setLowGain(value);
+    this.deckB.deckAudio.setLowGain(value);
+  }
+
+  setMid(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckA.deckAudio.setMidGain(value);
+    this.deckB.deckAudio.setMidGain(value);
+  }
+
+  setHigh(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckA.deckAudio.setHighGain(value);
+    this.deckB.deckAudio.setHighGain(value);
   }
 }

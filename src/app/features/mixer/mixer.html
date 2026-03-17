@@ -34,6 +34,11 @@
           <input
             type="range"
             class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+            type="range"
+            min="-12"
+            max="12"
+            step="1"
+            (input)="setLow($event)"
           />
         </div>
 
@@ -42,6 +47,11 @@
           <input
             type="range"
             class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+            type="range"
+            min="-12"
+            max="12"
+            step="1"
+            (input)="setMid($event)"
           />
         </div>
 
@@ -50,6 +60,11 @@
           <input
             type="range"
             class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+            type="range"
+            min="-12"
+            max="12"
+            step="1"
+            (input)="setHigh($event)"
           />
         </div>
       </div>
