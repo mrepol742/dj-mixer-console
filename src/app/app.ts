@@ -4,6 +4,7 @@ import { Mixer } from './features/mixer/mixer';
 import { Effects } from './features/effects/effects';
 import { Recorder } from './features/recorder/recorder';
 import { Library } from './features/library/library';
+import { DevtoolsDetector } from './core/security/devtools-dectector';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,10 @@ import { Library } from './features/library/library';
 })
 export class App {
   protected readonly title = signal('dj-mixer');
+
+  constructor(private _devtoolsDetector: DevtoolsDetector) {}
+
+  ngOnInit() {
+    this._devtoolsDetector.init();
+  }
 }
