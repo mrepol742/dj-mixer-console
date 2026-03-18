@@ -25,7 +25,7 @@
               }
             ],
             "styles": ["src/material-theme.scss", "src/styles.css"],
-            "allowedCommonJsDependencies": ["devtools-detector"]
+            "allowedCommonJsDependencies": ["devtools-detector", "jsmediatags"]
           },
           "configurations": {
             "production": {

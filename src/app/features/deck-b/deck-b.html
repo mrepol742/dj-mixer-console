@@ -25,7 +25,7 @@
   </div>
 
   <div class="flex flex-col">
-    <label class="text-sm text-gray-300 mb-1">Tempo</label>
+    <label class="text-sm text-gray-300 mb-1">BPM</label>
     <input
       type="range"
       min="0.5"
@@ -35,6 +35,53 @@
       (input)="setTempo($event)"
       class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
     />
+  </div>
+
+  <div class="w-full mt-4">
+    <label class="text-sm text-gray-300 mb-2 block">EQ Controls</label>
+    <div class="flex justify-between">
+      <div class="flex flex-col items-center">
+        <label class="text-xs text-gray-400 mb-1">Low</label>
+        <input
+          type="range"
+          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          type="range"
+          min="-12"
+          max="12"
+          step="1"
+          value="0"
+          (input)="setLow($event)"
+        />
+      </div>
+
+      <div class="flex flex-col items-center">
+        <label class="text-xs text-gray-400 mb-1">Mid</label>
+        <input
+          type="range"
+          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          type="range"
+          min="-12"
+          max="12"
+          step="1"
+          value="0"
+          (input)="setMid($event)"
+        />
+      </div>
+
+      <div class="flex flex-col items-center">
+        <label class="text-xs text-gray-400 mb-1">High</label>
+        <input
+          type="range"
+          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+          type="range"
+          min="-12"
+          max="12"
+          step="1"
+          value="0"
+          (input)="setHigh($event)"
+        />
+      </div>
+    </div>
   </div>
 
   <div class="flex justify-center">

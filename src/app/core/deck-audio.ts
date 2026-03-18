@@ -79,6 +79,11 @@ export class DeckAudio {
     this.isPlaying = false;
   }
 
+  resume() {
+    if (this.isPlaying) return;
+    this.play();
+  }
+
   stop() {
     this.pause();
     this.pausedAt = 0;

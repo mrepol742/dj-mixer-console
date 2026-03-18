@@ -14,4 +14,14 @@ export class Player {
 
   isPlaying$ = this.playerControl.isPlaying$;
   isLoading$ = this.playerControl.isLoading$;
+  trackInfo$ = this.playerControl.trackInfo$;
+
+  togglePlay() {
+    this.playerControl.paused();
+  }
+
+  setVolume(event: any) {
+    const value = parseFloat(event.target.value);
+    this.playerControl.setVolume(value);
+  }
 }

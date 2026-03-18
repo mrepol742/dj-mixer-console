@@ -112,4 +112,19 @@ export class DeckB {
     const value = event.target.value;
     this.deckAudio.setTempo(value);
   }
+
+  setLow(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckAudio.setLowGain(value);
+  }
+
+  setMid(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckAudio.setMidGain(value);
+  }
+
+  setHigh(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckAudio.setHighGain(value);
+  }
 }
