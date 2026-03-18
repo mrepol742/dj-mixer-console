@@ -23,6 +23,7 @@
     "@angular/router": "^21.2.0",
     "devtools-detector": "^2.0.25",
     "dotenv": "^17.3.1",
+    "idb": "^8.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "wavesurfer.js": "^7.12.3"

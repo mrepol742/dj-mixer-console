@@ -1,0 +1,23 @@
+.context-menu {
+  position: fixed;
+  background: #222;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.context-menu button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.context-menu button:hover {
+  background: #444;
+}

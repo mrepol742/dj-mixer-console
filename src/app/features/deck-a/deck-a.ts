@@ -3,6 +3,7 @@ import { AudioEngine } from '../../core/audio-engine';
 import { Waveform } from '../../shared/waveform/waveform';
 import { DeckAudio } from '../../core/deck-audio';
 import { MatIcon } from '@angular/material/icon';
+import { DeckControl } from '../../core/deck-control';
 
 @Component({
   selector: 'app-deck-a',
@@ -15,29 +16,63 @@ export class DeckA {
   deckAudio!: DeckAudio;
   isPlaying: boolean = false;
 
-  constructor(private audioEngine: AudioEngine) {}
+  constructor(
+    private audioEngine: AudioEngine,
+    private deckControl: DeckControl,
+  ) {}
 
   ngOnInit() {
     this.deckAudio = this.audioEngine.createDeck();
+
+    this.deckControl.loadTrack$.subscribe(({ deck, trackUrl }) => {
+      if (deck !== 'A') return;
+
+      this.audioEngine.loadTrackFromUrl(trackUrl).then((buffer) => {
+        this.deckAudio.loadTrack(buffer);
+
+        fetch(trackUrl)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const file = new File([blob], 'track.mp3', { type: blob.type });
+            this.waveform.loadTrack(file);
+          });
+      });
+    });
   }
 
   loadTrack(event: any) {
     const file = event.target.files[0];
     if (!file) return;
 
-    this.audioEngine.loadFileToBuffer(file).then((buffer) => {
-      this.deckAudio.loadTrack(buffer);
-      this.waveform.loadTrack(file);
-    });
+    this.loadFile(file);
   }
 
   onDrop(event: DragEvent) {
     event.preventDefault();
+    const url = event.dataTransfer?.getData('application/audio-url');
+    if (url) return this.loadUrl(url);
+
     if (!event.dataTransfer?.files) return;
 
     const file = event.dataTransfer.files[0];
     if (!file.type.startsWith('audio/')) return;
+    this.loadFile(file);
+  }
 
+  loadUrl(url: string) {
+    this.audioEngine.loadTrackFromUrl(url).then((buffer) => {
+      this.deckAudio.loadTrack(buffer);
+
+      fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const file = new File([blob], 'track.mp3', { type: 'audio/mp3' });
+          this.waveform.loadTrack(file);
+        });
+    });
+  }
+
+  loadFile(file: File) {
     this.audioEngine.loadFileToBuffer(file).then((buffer) => {
       this.deckAudio.loadTrack(buffer);
       this.waveform.loadTrack(file);

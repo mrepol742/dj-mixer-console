@@ -21,14 +21,28 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
     <div
-      *ngFor="let track of tracks"
-      class="bg-gray-700 p-2 rounded text-white flex justify-between items-center"
+      *ngFor="let track of tracks$ | async"
+      class="bg-gray-700 p-2 rounded text-white hover:bg-gray-600 transition-all flex justify-between items-center"
+      draggable="true"
+      (dragstart)="onDragStart($event, track)"
+      (contextmenu)="onRightClick($event, track)"
+      (click)="playTrack(track)"
     >
-      {{ track.name }}
+      <mat-icon>music_note</mat-icon>
+      <span class="mx-2 flex-1 truncate justify-start">{{ track.name }}</span>
+    </div>
 
-      <button (click)="playTrack(track)">
-        <mat-icon color="primary">{{ !isPlaying ? 'play_arrow' : 'pause' }}</mat-icon>
-      </button>
+    <div
+      *ngIf="contextMenuVisible"
+      [style.top.px]="contextMenuPosition.y"
+      [style.left.px]="contextMenuPosition.x"
+      class="context-menu"
+    >
+      <button (click)="playTrack(contextMenuTrack)">Play</button>
+      <button (click)="addToDeckA(contextMenuTrack)">Add to Deck A</button>
+      <button (click)="addToDeckB(contextMenuTrack)">Add to Deck B</button>
+      <button (click)="viewMetadata(contextMenuTrack)">View Metadata</button>
+      <button (click)="deleteTrack(contextMenuTrack)">Delete</button>
     </div>
   </div>
 </div>
