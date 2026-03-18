@@ -25,7 +25,15 @@
               }
             ],
             "styles": ["src/material-theme.scss", "src/styles.css"],
-            "allowedCommonJsDependencies": ["devtools-detector", "jsmediatags"]
+            "allowedCommonJsDependencies": ["devtools-detector", "jsmediatags"],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {

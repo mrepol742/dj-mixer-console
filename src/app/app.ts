@@ -1,15 +1,10 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Mixer } from './features/mixer/mixer';
-import { Effects } from './features/effects/effects';
-import { Recorder } from './features/recorder/recorder';
-import { LibraryFeature } from './features/library/library';
-import { DevtoolsDetector } from './core/security/devtools-dectector';
-import { Player } from './features/player/player';
-
+import { DevtoolsDetector } from './utils/devtools-dectector';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-root',
-  imports: [Effects, Recorder, Mixer, LibraryFeature, Player, MatIconModule],
+  imports: [RouterModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
