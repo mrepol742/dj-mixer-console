@@ -6,6 +6,7 @@ export class DeckAudio {
 
   private startedAt: number = 0;
   private pausedAt: number = 0;
+  private duration: number = 0;
   isPlaying: boolean = false;
 
   // EQ filters
@@ -62,6 +63,7 @@ export class DeckAudio {
     this.source.playbackRate.value = this.playbackRate;
     this.source.connect(this.lowFilter);
 
+    this.duration = this.audioBuffer.duration;
     let offset = this.pausedAt % this.audioBuffer.duration;
     this.source.start(0, offset);
 
@@ -87,6 +89,12 @@ export class DeckAudio {
   stop() {
     this.pause();
     this.pausedAt = 0;
+  }
+
+  getProgress() {
+    const currentTime = this.audioContext.currentTime - this.startedAt;
+    const progress = (currentTime / this.duration) * 100;
+    return Math.floor(Math.min(progress, 100));
   }
 
   private cleanupSource() {

@@ -37,6 +37,8 @@ export class PlayerControl {
     album: 'Unknown Album',
   });
   trackInfo$ = this._trackInfo$.asObservable();
+  private _isPlayerReady = new BehaviorSubject<boolean>(false);
+  isPlayerReady$ = this._isPlayerReady.asObservable();
 
   constructor(private audioEngine: AudioEngine) {
     this.deckAudio = this.audioEngine.createDeck();
@@ -46,16 +48,21 @@ export class PlayerControl {
     this.deckAudio.gainNode.gain.value = value;
   }
 
+  updateProgress() {
+    return this.deckAudio.getProgress();
+  }
+
   async play(track: Library) {
     if (this._isPlaying.getValue() && !this._isLoading.getValue()) {
       this.deckAudio.stop();
     }
 
+    this._isPlayerReady.next(true);
     this._isPlaying.next(true);
     this._isLoading.next(true);
 
     await this.blobUrlToBlob(track.url).then(async (blob) => {
-      const metadataPromise = await this.extractMetadata(blob);
+      const metadataPromise = await this.extractMetadata(blob, track.name);
       this._trackInfo$.next(metadataPromise);
     });
 
@@ -72,9 +79,16 @@ export class PlayerControl {
       });
   }
 
+  async stop() {
+    this.deckAudio.stop();
+    this._isPlaying.next(false);
+    this._isPlayerReady.next(false);
+  }
+
   async paused() {
     if (!this._isPlaying.getValue()) {
       this.deckAudio.resume();
+      this._isPlayerReady.next(true);
       this._isPlaying.next(true);
       return;
     }
@@ -82,7 +96,7 @@ export class PlayerControl {
     this._isPlaying.next(false);
   }
 
-  private extractMetadata(blob: Blob): Promise<MetadataResult> {
+  private extractMetadata(blob: Blob, fileName: string): Promise<MetadataResult> {
     return new Promise((resolve) => {
       jsmediatags.read(blob, {
         onSuccess: (tag: Metadata) => {
@@ -97,7 +111,7 @@ export class PlayerControl {
           }
 
           resolve({
-            title: title || 'Unknown Title',
+            title: title || fileName,
             artist: artist || 'Unknown Artist',
             album: album || 'Unknown Album',
             coverUrl,

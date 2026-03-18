@@ -27,6 +27,19 @@
       />
     </div>
 
+    <div class="w-full">
+      <label class="text-sm text-gray-300 mb-1">Master BPM</label>
+      <input
+        type="range"
+        min="0.5"
+        max="2"
+        step="0.01"
+        value="1"
+        (input)="setTempo($event)"
+        class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+      />
+    </div>
+
     <div class="w-full mt-4">
       <label class="text-sm text-gray-300 mb-2 block">EQ Controls</label>
       <div class="flex justify-between">

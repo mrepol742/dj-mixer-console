@@ -38,6 +38,12 @@ export class Mixer {
     );
   }
 
+  setTempo(event: any) {
+    const value = parseFloat(event.target.value);
+    this.deckA.deckAudio.setTempo(value);
+    this.deckB.deckAudio.setTempo(value);
+  }
+
   setLow(event: any) {
     const value = parseFloat(event.target.value);
     this.deckA.deckAudio.setLowGain(value);
