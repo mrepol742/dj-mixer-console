@@ -17,8 +17,8 @@ export class WaveformComponent implements AfterViewInit {
     if (isPlatformBrowser(this.platformId)) {
       this.wavesurfer = WaveSurfer.create({
         container: `#${this.containerId}`,
-        waveColor: '#4ade80',
-        progressColor: '#22c55e',
+        waveColor: 'rgba(168,85,247,0.6)',
+        progressColor: 'rgba(168,85,247,0.3)',
         height: 50,
       });
 

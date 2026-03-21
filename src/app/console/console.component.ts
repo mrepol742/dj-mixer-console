@@ -6,10 +6,20 @@ import { RecorderComponent } from './recorder/recorder.component';
 import { MixerComponent } from './mixer/mixer.component';
 import { LibraryComponent } from './library/library.component';
 import { PlayerComponent } from './player/player.component';
+import { DividerComponent } from '../shared/divider/divider.component';
 
 @Component({
   selector: 'app-console',
-  imports: [CommonModule, EffectsComponent, RecorderComponent, MixerComponent, LibraryComponent, PlayerComponent, MatIconModule],
+  imports: [
+    CommonModule,
+    EffectsComponent,
+    RecorderComponent,
+    MixerComponent,
+    LibraryComponent,
+    PlayerComponent,
+    MatIconModule,
+    DividerComponent,
+  ],
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
 })

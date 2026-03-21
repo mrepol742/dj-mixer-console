@@ -1,0 +1,16 @@
+.divider {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: cover;
+  flex-shrink: 0;
+  margin: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.divider.horizontal {
+  box-shadow: 0 0 10px rgba(168,85,247,0.3);
+}
+
+.divider.vertical {
+  box-shadow: 0 0 10px rgba(168,85,247,0.3);
+}

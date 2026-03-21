@@ -1,1 +1,6 @@
-<p>knob works!</p>
+<div class="knob-container">
+  <div class="knob" [style.transform]="'rotate(' + rotation + 'deg)'">
+    <div class="indicator"></div>
+  </div>
+  <span class="label">{{ label }}</span>
+</div>

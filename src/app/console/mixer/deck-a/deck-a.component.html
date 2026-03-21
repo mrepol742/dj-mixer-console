@@ -3,93 +3,40 @@
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
 >
-  <app-waveform [containerId]="'waveform-a'"></app-waveform>
+  <div class="mb-2">
+    <app-waveform [containerId]="'waveform-a'"></app-waveform>
+  </div>
 
   <input
     type="file"
     (change)="loadTrack($event)"
-    class="mt-2 block w-full text-gray-200 bg-gray-700 border border-gray-600 rounded px-3 py-2 cursor-pointer"
+    class="hidden mt-2 block w-full text-gray-200 bg-gray-700 border border-gray-600 rounded px-3 py-2 cursor-pointer"
     name="deck-a"
   />
 
-  <div class="flex flex-col">
-    <label class="text-sm text-gray-300 mb-1">Volume</label>
-    <input
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      (input)="setVolume($event)"
-      class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-    />
-  </div>
+  <div class="flex flex-col justify-center items-center space-y-4">
+    <app-slider orientation="horizontal" (valueChange)="setVolume($event)"></app-slider>
 
-  <div class="flex flex-col">
-    <label class="text-sm text-gray-300 mb-1">BPM</label>
-    <input
-      type="range"
-      min="0.5"
-      max="2"
-      step="0.01"
-      value="1"
-      (input)="setTempo($event)"
-      class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-    />
+    <app-slider orientation="horizontal" (valueChange)="setTempo($event)"></app-slider>
   </div>
 
   <div class="w-full mt-4">
-    <label class="text-sm text-gray-300 mb-2 block">EQ Controls</label>
     <div class="flex justify-between">
-      <div class="flex flex-col items-center">
-        <label class="text-xs text-gray-400 mb-1">Low</label>
-        <input
-          type="range"
-          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-          type="range"
-          min="-12"
-          max="12"
-          step="1"
-          value="0"
-          (input)="setLow($event)"
-        />
-      </div>
+    <app-knob
+      label="Low" (valueChange)="setLow($event)"
+    ></app-knob>
 
-      <div class="flex flex-col items-center">
-        <label class="text-xs text-gray-400 mb-1">Mid</label>
-        <input
-          type="range"
-          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-          type="range"
-          min="-12"
-          max="12"
-          step="1"
-          value="0"
-          (input)="setMid($event)"
-        />
-      </div>
+    <app-knob
+      label="Mid" (valueChange)="setMid($event)"
+    ></app-knob>
 
-      <div class="flex flex-col items-center">
-        <label class="text-xs text-gray-400 mb-1">High</label>
-        <input
-          type="range"
-          class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-          type="range"
-          min="-12"
-          max="12"
-          step="1"
-          value="0"
-          (input)="setHigh($event)"
-        />
-      </div>
+    <app-knob
+      label="High" (valueChange)="setHigh($event)"
+    ></app-knob>
     </div>
   </div>
 
   <div class="flex justify-center">
-    <button
-      class="flex items-center justify-center bg-green-500 hover:bg-green-600 transition-colors px-4 py-2 rounded-lg text-white"
-      (click)="play()"
-    >
-      <mat-icon color="primary">{{ !isPlaying ? 'play_arrow' : 'pause' }}</mat-icon>
-    </button>
+    <app-button (clicked)="play()"> <mat-icon color="primary">{{ !isPlaying ? 'play_arrow' : 'pause' }}</mat-icon></app-button>
   </div>
 </div>

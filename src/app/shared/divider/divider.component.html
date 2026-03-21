@@ -1,0 +1,14 @@
+<div
+  class="divider"
+  [ngClass]="orientation"
+  [style.background]="color"
+  [style.height]="orientation === 'vertical' ? '100%' : thickness"
+  [style.width]="orientation === 'horizontal' ? '100%' : thickness"
+  [style.mask-image]="orientation === 'horizontal'
+    ? 'linear-gradient(to right, transparent, black, transparent)'
+    : 'linear-gradient(to bottom, transparent, black, transparent)'"
+  [style.webkitMaskImage]="orientation === 'horizontal'
+    ? 'linear-gradient(to right, transparent, black, transparent)'
+    : 'linear-gradient(to bottom, transparent, black, transparent)'"
+  [style.mask-size]="orientation === 'horizontal' ? '100% 100%' : '100% 100%'"
+></div>

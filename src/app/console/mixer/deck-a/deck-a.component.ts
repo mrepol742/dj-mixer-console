@@ -4,10 +4,13 @@ import { MatIcon } from '@angular/material/icon';
 import { DeckAudioService } from '../../../core/services/deck-audio/deck-audio.service';
 import { AudioEngineService } from '../../../core/services/audio-engine/audio-engine.service';
 import { DeckControlService } from '../../../core/services/deck-control/deck-control.service';
+import { KnobComponent } from '../../../shared/knob/knob.component';
+import { SliderComponent } from '../../../shared/slider/slider.component';
+import { ButtonComponent } from '../../../shared/button/button.component';
 
 @Component({
   selector: 'app-deck-a',
-  imports: [WaveformComponent, MatIcon],
+  imports: [WaveformComponent, MatIcon, KnobComponent, SliderComponent, ButtonComponent],
   templateUrl: './deck-a.component.html',
   styleUrl: './deck-a.component.css',
 })
@@ -105,27 +108,27 @@ export class DeckAComponent {
   }
 
   setVolume(event: any) {
-    const value = parseFloat(event.target.value);
+    const value = parseFloat(event);
     this.deckAudio.setVolume(value);
   }
 
   setTempo(event: any) {
-    const value = parseFloat(event.target.value);
+    const value = parseFloat(event);
     this.deckAudio.setTempo(value);
   }
 
   setLow(event: any) {
-    const value = parseFloat(event.target.value);
+    const value = parseFloat(event);
     this.deckAudio.setLowGain(value);
   }
 
   setMid(event: any) {
-    const value = parseFloat(event.target.value);
+    const value = parseFloat(event);
     this.deckAudio.setMidGain(value);
   }
 
   setHigh(event: any) {
-    const value = parseFloat(event.target.value);
+    const value = parseFloat(event);
     this.deckAudio.setHighGain(value);
   }
 }
