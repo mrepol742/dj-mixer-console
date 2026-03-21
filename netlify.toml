@@ -1,5 +1,5 @@
 [build]
-  command = "echo 'NODE_ENV=production' > .env && node env.js && ng build"
+  command = "echo 'NODE_ENV=production\nIS_DEVELOPMENT=true\n' > .env && node env.js && ng build"
   publish = "dist/dj-mixer/browser"
 
 [functions]
