@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DeckAudioService } from '../deck-audio/deck-audio.service';
 import { AudioEngineService } from '../audio-engine/audio-engine.service';
-import { Library } from '../../../console/library/library.component.types';
-import * as jsmediatags from 'jsmediatags/dist/jsmediatags.min.js';
-import { Metadata, MetadataResult } from './player-control.types';
+import { extractMetadata } from '../../../utils/media';
+import { Library } from './player-control.types';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerControlService {
@@ -13,11 +12,7 @@ export class PlayerControlService {
   deckAudio!: DeckAudioService;
   private _isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this._isLoading.asObservable();
-  _trackInfo$ = new BehaviorSubject<MetadataResult>({
-    title: 'Unknown Title',
-    artist: 'Unknown Artist',
-    album: 'Unknown Album',
-  });
+  _trackInfo$ = new BehaviorSubject<Library | null>(null);
   trackInfo$ = this._trackInfo$.asObservable();
   private _isPlayerReady = new BehaviorSubject<boolean>(false);
   isPlayerReady$ = this._isPlayerReady.asObservable();
@@ -44,7 +39,7 @@ export class PlayerControlService {
     this._isLoading.next(true);
 
     await this.blobUrlToBlob(track.url).then(async (blob) => {
-      const metadataPromise = await this.extractMetadata(blob, track.name);
+      const metadataPromise = await extractMetadata(blob, track.url, track.title);
       this._trackInfo$.next(metadataPromise);
     });
 
@@ -76,34 +71,6 @@ export class PlayerControlService {
     }
     this.deckAudio.pause();
     this._isPlaying.next(false);
-  }
-
-  private extractMetadata(blob: Blob, fileName: string): Promise<MetadataResult> {
-    return new Promise((resolve) => {
-      jsmediatags.read(blob, {
-        onSuccess: (tag: Metadata) => {
-          const { title, artist, album } = tag.tags;
-          let coverUrl: string | undefined;
-
-          if (tag.tags.picture) {
-            const { data, format } = tag.tags.picture;
-            const byteArray = new Uint8Array(data);
-            const blob = new Blob([byteArray], { type: format });
-            coverUrl = URL.createObjectURL(blob);
-          }
-
-          resolve({
-            title: title || fileName,
-            artist: artist || 'Unknown Artist',
-            album: album || 'Unknown Album',
-            coverUrl,
-          });
-        },
-        onError: () => {
-          resolve({ title: 'Unknown Title', artist: 'Unknown Artist', album: 'Unknown Album' });
-        },
-      });
-    });
   }
 
   private blobUrlToBlob(blobUrl: string): Promise<Blob> {

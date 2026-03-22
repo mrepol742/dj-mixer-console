@@ -1,10 +1,46 @@
 <div
-  class="p-6 space-y-4"
+  [class]="
+    'p-6 space-y-4 rounded transition-all duration-200 ' +
+    (isDraggingOver ? 'bg-[rgba(168,85,247,0.1)]' : '')
+  "
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
 >
-  <div class="mb-2">
-    <app-waveform [containerId]="'waveform-b'"></app-waveform>
+  <div
+    *ngIf="trackMetadata$ | async as track"
+    class="flex items-center gap-3 p-2 sm:p-3"
+  >
+    <img
+      [src]="track.cover_url"
+      alt="Cover"
+      class="w-12 h-12 sm:w-16 sm:h-16 rounded object-cover flex-shrink-0"
+    />
+
+    <div class="min-w-0">
+      <h3 class="text-sm sm:text-base font-semibold truncate">
+        {{ track.title }}
+      </h3>
+      <p class="text-xs sm:text-sm text-gray-400 truncate">
+        {{ track.artist }}
+      </p>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <div class="relative">
+
+      <div
+        *ngIf="isLoading"
+        class="absolute inset-0 flex items-center justify-center text-white/50 animate-pulse z-10"
+      >
+        <mat-icon class="animate-spin me-2">refresh</mat-icon>
+        loading...
+      </div>
+
+      <app-waveform [containerId]="'waveform-b'"></app-waveform>
+
+    </div>
   </div>
 
   <input

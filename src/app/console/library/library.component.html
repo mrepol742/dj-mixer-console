@@ -1,6 +1,6 @@
 <div class="px-6 mt-6">
   <div
-    class="border-2 border-dashed border-violet-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition"
+    class="border-2 border-dashed border-[rgba(168,85,247,0.7)] mb-4 rounded-lg p-6 text-center cursor-pointer hover:border-[rgba(168,85,247,0.5)] transition"
     (drop)="onDrop($event)"
     (dragover)="onDragOver($event)"
     (click)="fileInput.click()"
@@ -17,30 +17,71 @@
     />
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-4">
-    <div
-      *ngFor="let track of tracks$ | async"
-      class="bg-gray-800/50 p-2 rounded text-white hover:bg-gray-600 transition-all flex justify-between items-center"
-      draggable="true"
-      (dragstart)="onDragStart($event, track)"
-      (contextmenu)="onRightClick($event, track)"
-      (click)="playTrack(track)"
-    >
-      <mat-icon>music_note</mat-icon>
-      <span class="mx-2 flex-1 truncate justify-start">{{ track.name }}</span>
-    </div>
+  <div class="w-full overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="bg-purple-700/40">
+          <th class="p-2 text-left">#</th>
+          <th class="p-2 text-left">Cover</th>
+          <th class="p-2 text-left">Track</th>
+          <th class="p-2 text-left">Artist</th>
+          <th class="p-2 text-left">Album</th>
+          <th class="p-2 text-left">BPM</th>
+        </tr>
+      </thead>
 
-    <div
-      *ngIf="contextMenuVisible"
-      [style.top.px]="contextMenuPosition.y"
-      [style.left.px]="contextMenuPosition.x"
-      class="context-menu"
-    >
-      <button (click)="playTrack(contextMenuTrack)">Play</button>
-      <button (click)="addToDeckA(contextMenuTrack)">Add to Deck A</button>
-      <button (click)="addToDeckB(contextMenuTrack)">Add to Deck B</button>
-      <button (click)="viewMetadata(contextMenuTrack)">View Metadata</button>
-      <button (click)="deleteTrack(contextMenuTrack)">Delete</button>
-    </div>
+      <tbody>
+        <tr
+          *ngFor="let track of tracks$ | async; let i = index"
+          class="bg-[rgba(168,85,247,0.4)] hover:bg-[rgba(168,85,247,0.5)] transition-all cursor-pointer"
+          draggable="true"
+          (dragstart)="onDragStart($event, track)"
+          (contextmenu)="onRightClick($event, track)"
+          (click)="playTrack(track)"
+        >
+          <td class="p-2 whitespace-nowrap">{{ i + 1 }}</td>
+
+          <td class="p-2">
+            <img
+              *ngIf="track.cover_url"
+              [src]="track.cover_url"
+              alt="Cover"
+              class="w-10 h-10 rounded object-cover"
+            />
+          </td>
+
+          <td class="p-2 max-w-[120px] sm:max-w-[200px] truncate">
+            {{ track.title }}
+          </td>
+
+          <td class="p-2 max-w-[100px] sm:max-w-[180px] truncate">
+            {{ track.artist }}
+          </td>
+
+          <td class="p-2 max-w-[100px] sm:max-w-[180px] truncate">
+            {{ track.album }}
+          </td>
+
+          <td class="p-2 whitespace-nowrap text-center">
+            {{ track.bpm }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    *ngIf="contextMenuVisible"
+    [style.top.px]="contextMenuPosition.y"
+    [style.left.px]="contextMenuPosition.x"
+    class="context-menu"
+  >
+    <button (click)="playTrack(contextMenuTrack)">Play</button>
+    <button (click)="addToDeckA(contextMenuTrack)">Add to Deck A</button>
+    <button (click)="addToDeckB(contextMenuTrack)">Add to Deck B</button>
+    <button (click)="viewMetadata(contextMenuTrack)">View Metadata</button>
+    <button (click)="editMetadata(contextMenuTrack)">Edit Metadata</button>
+    <button (click)="exportTrack(contextMenuTrack)">Export</button>
+    <button (click)="deleteTrack(contextMenuTrack)">Delete</button>
   </div>
 </div>

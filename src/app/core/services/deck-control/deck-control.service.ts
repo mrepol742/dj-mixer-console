@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 
 export interface DeckCommand {
   deck: 'A' | 'B';
-  trackUrl: string;
+  track: string;
 }
 
 @Injectable({
@@ -13,7 +13,8 @@ export class DeckControlService {
   private _loadTrack = new Subject<DeckCommand>();
   loadTrack$ = this._loadTrack.asObservable();
 
-  loadTrack(deck: 'A' | 'B', trackUrl: string) {
-    this._loadTrack.next({ deck, trackUrl });
+  // the track is expected to be a stringify json
+  loadTrack(deck: 'A' | 'B', track: string) {
+    this._loadTrack.next({ deck, track });
   }
 }

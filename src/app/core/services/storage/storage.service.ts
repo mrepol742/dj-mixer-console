@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { openDB, IDBPDatabase } from 'idb';
-import { Storage } from './storage.types';
+import { Storage, Track } from './storage.types';
+import { Library } from '../player-control/player-control.types';
 
 @Injectable({
   providedIn: 'root',
@@ -21,17 +22,17 @@ export class StorageService {
     });
   }
 
-  async saveFile(file: File) {
+  async saveFile(file: File, metadata: Library) {
     const db = await this.dbPromise;
     await db.put('files', {
       name: file.name,
       data: file,
       type: file.type,
-      addedAt: Date.now(),
+      metadata,
     });
   }
 
-  async getAllFiles(): Promise<{ name: string; data: Blob; type: string }[]> {
+  async getAllFiles(): Promise<Track[]> {
     const db = await this.dbPromise;
     return await db.getAll('files');
   }

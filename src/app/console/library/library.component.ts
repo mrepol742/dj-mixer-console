@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { Library } from './library.component.types';
 import { DeckAudioService } from '../../core/services/deck-audio/deck-audio.service';
 import { AudioEngineService } from '../../core/services/audio-engine/audio-engine.service';
 import { StorageService } from '../../core/services/storage/storage.service';
@@ -9,10 +7,15 @@ import { BehaviorSubject } from 'rxjs';
 import { DeckControlService } from '../../core/services/deck-control/deck-control.service';
 import { PlayerControlService } from '../../core/services/player-control/player-control.service';
 import { DialogService } from '../../core/services/dialog/dialog.service';
+import { MetadataFormComponent } from './metadata-form/metadata-form.component';
+import { extractMetadata } from '../../utils/media';
+import { createBlobFromURL } from '../../utils/url';
+import { Library } from '../../core/services/player-control/player-control.types';
+import { Track } from '../../core/services/storage/storage.types';
 
 @Component({
   selector: 'app-library',
-  imports: [CommonModule, MatIcon],
+  imports: [CommonModule],
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.css'],
 })
@@ -42,7 +45,7 @@ export class LibraryComponent {
   private async loadStoredTracks() {
     const files = await this.offlineStorage.getAllFiles();
     const tracks: Library[] = files.map((f) => ({
-      name: f.name,
+      ...f.metadata,
       url: URL.createObjectURL(f.data),
     }));
     this._tracks.next(tracks);
@@ -67,14 +70,41 @@ export class LibraryComponent {
   }
 
   async addFile(file: File) {
-    await this.offlineStorage.saveFile(file);
     const current = this._tracks.value;
-    this._tracks.next([...current, { name: file.name, url: URL.createObjectURL(file) }]);
+    const url = URL.createObjectURL(file);
+    createBlobFromURL(url).then(async (blob) => {
+      if (!blob) {
+        console.error('Failed to create blob from URL for file:', file.name);
+        console.info('Adding track with basic metadata only');
+        const metadata = {
+          id: crypto.randomUUID(),
+          title: file.name,
+          artist: 'Unknown Artist',
+          album: 'Unknown Album',
+          bpm: null,
+          filename: file.name,
+          cover_url: null,
+          url,
+          created_at: new Date(),
+        };
+        this._tracks.next([...current, metadata]);
+        await this.offlineStorage.saveFile(file, metadata);
+        return;
+      }
+
+      const metadata = await extractMetadata(blob, url, file.name);
+      const newMetadata = {
+        ...metadata,
+        url,
+      };
+      this._tracks.next([...current, newMetadata]);
+      await this.offlineStorage.saveFile(file, newMetadata);
+    });
   }
 
-  async removeTrack(name: string) {
-    await this.offlineStorage.deleteFile(name);
-    const updated = this._tracks.value.filter((t) => t.name !== name);
+  async removeTrack(id: string) {
+    await this.offlineStorage.deleteFile(id);
+    const updated = this._tracks.value.filter((t) => t.id !== id);
     this._tracks.next(updated);
   }
 
@@ -92,7 +122,7 @@ export class LibraryComponent {
   }
 
   onDragStart(event: DragEvent, track: Library) {
-    event.dataTransfer?.setData('application/audio-url', track.url);
+    event.dataTransfer?.setData('application/audio-track', JSON.stringify(track));
   }
 
   onRightClick(event: MouseEvent, track: Library) {
@@ -108,22 +138,36 @@ export class LibraryComponent {
   }
 
   addToDeckA(track: Library) {
-    this.deckControl.loadTrack('A', track.url);
+    this.deckControl.loadTrack('A', JSON.stringify(track));
     this.contextMenuVisible = false;
   }
 
   addToDeckB(track: Library) {
-    this.deckControl.loadTrack('B', track.url);
+    this.deckControl.loadTrack('B', JSON.stringify(track));
     this.contextMenuVisible = false;
   }
 
   deleteTrack(track: Library) {
-    this.removeTrack(track.name);
+    this.removeTrack(track.id);
     this.contextMenuVisible = false;
   }
 
   viewMetadata(track: Library) {
-    this.dialogService.open(LibraryComponent, { name: 'John Doe' });
+    this.dialogService.open(MetadataFormComponent, { name: 'John Doe' });
     this.contextMenuVisible = false;
+  }
+
+  editMetadata(track: Library) {
+    this.dialogService.open(MetadataFormComponent, { name: 'John Doe' });
+    this.contextMenuVisible = false;
+  }
+
+  exportTrack(track: Library) {
+    const link = document.createElement('a');
+    link.href = track.url;
+    link.download = track.title;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

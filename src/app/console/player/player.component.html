@@ -10,8 +10,9 @@
 
   <div class="bg-gray-900 text-white shadow-lg">
     <ng-container *ngIf="isLoading$ | async; else playingControls">
-      <div class="flex justify-center">
-        <div class="animate-pulse text-gray-400 text-sm">Loading track...</div>
+      <div class="flex justify-center items-center text-white/50 animate-pulse z-10">
+        <mat-icon class="animate-spin me-2">refresh</mat-icon>
+          loading...
       </div>
     </ng-container>
 
@@ -22,12 +23,12 @@
 
       <div class="flex items-center justify-between px-4 py-2">
         <div class="flex items-center gap-3 w-2/3 md:w-1/3">
-          <div *ngIf="!(trackInfo$ | async)?.coverUrl" class="w-14 md:w-10 h-10 bg-gray-700 rounded flex items-center justify-center">
+          <div *ngIf="!(trackInfo$ | async)?.url" class="w-14 md:w-10 h-10 bg-gray-700 rounded flex items-center justify-center">
             <mat-icon>album</mat-icon>
           </div>
           <img
-            *ngIf="(trackInfo$ | async)?.coverUrl"
-            [src]="(trackInfo$ | async)?.coverUrl"
+            *ngIf="(trackInfo$ | async)?.url"
+            [src]="(trackInfo$ | async)?.url"
             alt="Cover"
             class="w-10 h-10 rounded object-cover"
           />

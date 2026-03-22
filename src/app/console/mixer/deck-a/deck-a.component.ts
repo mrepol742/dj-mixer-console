@@ -7,10 +7,20 @@ import { DeckControlService } from '../../../core/services/deck-control/deck-con
 import { KnobComponent } from '../../../shared/knob/knob.component';
 import { SliderComponent } from '../../../shared/slider/slider.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
+import { CommonModule } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+import { Library } from '../../../core/services/player-control/player-control.types';
 
 @Component({
   selector: 'app-deck-a',
-  imports: [WaveformComponent, MatIcon, KnobComponent, SliderComponent, ButtonComponent],
+  imports: [
+    WaveformComponent,
+    MatIcon,
+    KnobComponent,
+    SliderComponent,
+    ButtonComponent,
+    CommonModule,
+  ],
   templateUrl: './deck-a.component.html',
   styleUrl: './deck-a.component.css',
 })
@@ -18,6 +28,10 @@ export class DeckAComponent {
   @ViewChild(WaveformComponent) waveform!: WaveformComponent;
   deckAudio!: DeckAudioService;
   isPlaying: boolean = false;
+  isLoading: boolean = false;
+  isDraggingOver: boolean = false;
+  private trackMetadataSubject = new BehaviorSubject<Library | null>(null);
+  trackMetadata$ = this.trackMetadataSubject.asObservable();
 
   constructor(
     private audioEngine: AudioEngineService,
@@ -27,19 +41,27 @@ export class DeckAComponent {
   ngOnInit() {
     this.deckAudio = this.audioEngine.createDeck();
 
-    this.deckControl.loadTrack$.subscribe(({ deck, trackUrl }) => {
+    this.deckControl.loadTrack$.subscribe(({ deck, track }) => {
       if (deck !== 'A') return;
+      this.isLoading = true;
+      try {
+        const _track = JSON.parse(track);
+        this.trackMetadataSubject.next(_track);
 
-      this.audioEngine.loadTrackFromUrl(trackUrl).then((buffer) => {
-        this.deckAudio.loadTrack(buffer);
+        this.audioEngine.loadTrackFromUrl(_track.url).then((buffer) => {
+          this.deckAudio.loadTrack(buffer);
 
-        fetch(trackUrl)
-          .then((res) => res.blob())
-          .then((blob) => {
-            const file = new File([blob], 'track.mp3', { type: blob.type });
-            this.waveform.loadTrack(file);
-          });
-      });
+          fetch(_track.url)
+            .then((res) => res.blob())
+            .then((blob) => {
+              const file = new File([blob], 'track.mp3', { type: blob.type });
+              this.waveform.loadTrack(file);
+              this.isLoading = false;
+            });
+        });
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 
@@ -52,8 +74,21 @@ export class DeckAComponent {
 
   onDrop(event: DragEvent) {
     event.preventDefault();
-    const url = event.dataTransfer?.getData('application/audio-url');
-    if (url) return this.loadUrl(url);
+    this.isDraggingOver = false;
+    this.isLoading = true;
+
+    const track = event.dataTransfer?.getData('application/audio-track');
+    if (track) {
+      try {
+        const _track = JSON.parse(track);
+        this.trackMetadataSubject.next(_track);
+        this.loadUrl(_track.url);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        return;
+      }
+    }
 
     if (!event.dataTransfer?.files) return;
 
@@ -65,6 +100,7 @@ export class DeckAComponent {
   loadUrl(url: string) {
     this.audioEngine.loadTrackFromUrl(url).then((buffer) => {
       this.deckAudio.loadTrack(buffer);
+      this.isLoading = false;
 
       fetch(url)
         .then((res) => res.blob())
@@ -79,11 +115,17 @@ export class DeckAComponent {
     this.audioEngine.loadFileToBuffer(file).then((buffer) => {
       this.deckAudio.loadTrack(buffer);
       this.waveform.loadTrack(file);
+      this.isLoading = false;
     });
   }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
+    this.isDraggingOver = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    this.isDraggingOver = false;
   }
 
   play() {

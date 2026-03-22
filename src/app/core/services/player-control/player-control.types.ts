@@ -3,6 +3,7 @@ export interface Metadata {
     title?: string;
     artist?: string;
     album?: string;
+    bpm?: number;
     picture?: {
       data: number[];
       format: string;
@@ -10,9 +11,14 @@ export interface Metadata {
   };
 }
 
-export interface MetadataResult {
+export interface Library {
+  id: string;
   title: string;
   artist: string;
   album: string;
-  coverUrl?: string;
+  bpm: number | null;
+  filename: string;
+  cover_url: string | null;
+  url: string;
+  created_at: Date;
 }

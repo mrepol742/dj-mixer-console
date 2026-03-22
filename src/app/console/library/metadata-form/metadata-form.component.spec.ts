@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EffectsComponent } from './effects.component';
+import { MetadataFormComponent } from './metadata-form.component';
 
-describe('Effects', () => {
-  let component: EffectsComponent;
-  let fixture: ComponentFixture<EffectsComponent>;
+describe('MetadataForm', () => {
+  let component: MetadataFormComponent;
+  let fixture: ComponentFixture<MetadataFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EffectsComponent],
+      imports: [MetadataFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EffectsComponent);
+    fixture = TestBed.createComponent(MetadataFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
